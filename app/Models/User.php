@@ -6,6 +6,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\department_conn;
+use App\Models\position;
 
 class User extends Authenticatable
 {
@@ -40,4 +42,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Связь к департаментам
+    public function departments(){
+        return $this->belongsTo(Department_conn::class,'id','user_id');
+    }
+    //Связь к должности
+    public function position(){
+        return $this->hasOne(Position::class,'id','position_id');
+    }
 }

@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
+// Таблица пользователей
 class CreateUsersTable extends Migration
 {
     /**
@@ -16,6 +18,8 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->bigInteger('position_id')->unsigned()->nullable();
+            $table->foreign('position_id')->references('id')->on('positions');//Внешний ключ к должности
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
