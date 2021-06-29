@@ -17,7 +17,7 @@ class CrudController extends Controller
     public function AddDepartment(Request $req)
     {
         $dep = new department();
-        if (isset($req->name) && (Auth::user()->rights >= 1)) {
+        if (isset($req->name) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $dep->name = $req->name;
             $dep->save();
             return back()->with("suc", "Успешно!");
@@ -29,7 +29,7 @@ class CrudController extends Controller
     public function DelDepartment(Request $req)
     {
 
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             var_dump($req->id);
             if (is_array($req->id)) {
                 department::destroy($req->id);
@@ -44,8 +44,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function UpdDepartment(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights >= 1)) {
-            var_dump($req->id);
+        if (isset($req->id) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
 
             $dep = department::where("id", $req->id)->first();
             if (isset($dep->name)) {
@@ -64,7 +63,7 @@ class CrudController extends Controller
     public function AddPosition(Request $req)
     {
         $pos = new position();
-        if (isset($req->name) && (Auth::user()->rights >= 1)) {
+        if (isset($req->name) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $pos->name = $req->name;
             $pos->save();
             return back()->with("suc", "Успешно!");
@@ -75,7 +74,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function DelPosition(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             if (is_array($req->id)) {
                 position::destroy($req->id);
             } else {
@@ -89,7 +88,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function UpdPosition(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $pos = position::where("id", $req->id);
             if (isset($pos->name)) {
                 $pos->name = $req->name;
@@ -105,7 +104,7 @@ class CrudController extends Controller
     ////////////////////////////////////////////////////////////////////
     public function AddUser(Request $req)
     {
-        if ((Auth::user()->rights >= 1)) {
+        if ((Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $user = new User();
             $user->name = $req->name;
             $user->password = Hash::make($req->password);
@@ -137,7 +136,7 @@ class CrudController extends Controller
     }
     public function UpdUser(Request $req)
     {
-        if ((Auth::user()->rights >= 1) && (User::where("id", $req->id)->exists())) {
+        if ((Auth::user()->rights >= 1) && (User::where("id", $req->id)->exists())) { //Проверка прав и взодящего запроса
             $user = User::where("id", $req->id)->first();
             if (isset($req->name)) {
                 $user->name = $req->name;
@@ -166,15 +165,17 @@ class CrudController extends Controller
 
             if (isset($req->dep_id)) {
                 foreach ($req->dep_id as $dep) {
-                    $depart = new department_conn();
-                    $depart->user_id = $user->id;
-                    if (department::where("id", $dep)->exists()) {
-                        $depart->dep_id = $dep;
-                    } else {
-                        $user->delete();
-                        return back()->with("err", "Неудачно!");
+                    if (!department_conn::where("user_id", $user->id)->where("dep_id", $dep)->exists()) {
+                        $depart = new department_conn();
+                        $depart->user_id = $user->id;
+                        if (department::where("id", $dep)->exists()) {
+                            $depart->dep_id = $dep;
+                        } else {
+                            $user->delete();
+                            return back()->with("err", "Неудачно!");
+                        }
+                        $depart->save();
                     }
-                    $depart->save();
                 }
             }
             return back()->with("suc", "Успешно!");
@@ -182,7 +183,7 @@ class CrudController extends Controller
     }
     public function DelUser(Request $req)
     {
-        if ((Auth::user()->id != $req->id) && (Auth::user()->rights > 1)) {
+        if ((Auth::user()->id != $req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             User::destroy($req->id);
             return back()->with("suc", "Успешно!");
         } else {
@@ -197,7 +198,7 @@ class CrudController extends Controller
 
             if ($req->file()) {
                 $fileName = time() . '_' . $req->file->getClientOriginalName();
-                $filePath = $req->file('file')->storeAs('uploads/'.Auth::user()->email, $fileName, 'public');
+                $filePath = $req->file('file')->storeAs('uploads/' . Auth::user()->email, $fileName, 'public');
 
                 $fileModel->file_name = time() . '_' . $req->file->getClientOriginalName();
                 $fileModel->file_path = '/storage/' . $filePath;
@@ -205,6 +206,8 @@ class CrudController extends Controller
                 $fileModel->save();
 
                 return back()->with('suc', 'Усешно!');
+            } else {
+                return back()->with('err', 'Неудачно!');
             }
         }
     }

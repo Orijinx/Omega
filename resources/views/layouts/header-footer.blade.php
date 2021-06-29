@@ -15,14 +15,30 @@
 
 <body>
 
-    {{--NAV BAR SECTION  --}}
+    {{-- NAV BAR SECTION --}}
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">OMEGA</a>
         </div>
-        <div class="container-fluid">
-            <a class="navbar" href="/register">register</a>
-        </div>
+
+        @if (Auth::check())
+            <div class="container-fluid">
+                <h6>{{ Auth::user()->email }}</h6>
+                <form action="/logout" method="post">
+                    @csrf
+                    <button class="btn btn-primary" type="submit">Выйти</button>
+                </form>
+            </div>
+        @else
+            <div class="container-fluid">
+            <div class="row">
+                <a class="btn btn-primary m-1" href="/register">Регистрация</a>
+                <a class="btn btn-primary m-1" href="/login">Вход</a>
+            </div>
+                
+            </div>
+        @endif
+
     </nav>
     {{--  --}}
 
