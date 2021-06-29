@@ -20,6 +20,12 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->bigInteger('position_id')->unsigned()->nullable();
             $table->foreign('position_id')->references('id')->on('positions');//Внешний ключ к должности
+            // 
+            $table->integer('rights')->default(0);// Права пользователя, дефолтное значение - обычный юзер.
+            // 0 - обычный пользователь
+            // 1 - менеджер
+            // 2 - администратор
+            // 
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

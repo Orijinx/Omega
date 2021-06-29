@@ -6,7 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\department_conn;
+use App\Models\department;
 use App\Models\position;
 
 class User extends Authenticatable
@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     //Связь к департаментам
     public function departments(){
-        return $this->belongsTo(Department_conn::class,'id','user_id');
+        return $this->belongsToMany(department::class,'department_conns','user_id','dep_id');
     }
     //Связь к должности
     public function position(){
