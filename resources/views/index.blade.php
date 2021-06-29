@@ -4,7 +4,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col">id</th>
+                <th scope="col">Файлы</th>
                 <th scope="col">email</th>
                 <th scope="col">Departments</th>
                 <th scope="col">Position</th>
@@ -14,7 +14,7 @@
         <tbody>
             @foreach ($users as $user)
                 <tr>
-                    <th scope="row">#{{ $user->id }}</th>
+                    <th scope="row"><a href="files/{{$user->id}}">#{{ $user->id }}</a></th>
                     <td>{{ $user->email }}</td>
                     <td>
                         @foreach ($user->departments()->get() as $department)
@@ -45,6 +45,15 @@
         </tbody>
     </table>
     <hr>
+    <form action="/loadfile" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="exampleFormControlFile1">Загрузка файлов</label>
+            <input name="file" type="file" class="form-control-file" id="exampleFormControlFile1">
+       <button class="btn btn-primary" type="submit">Загрузить</button>
+        </div>
+    </form>
+    <hr>
 
     @if (Auth::check())
 
@@ -53,14 +62,14 @@
 
             {{-- CUD section --}}
             <h2 class="text-center my-5">Панель управления</h2>
-        @if (Session::has("err")))
-        <h4 style="color: red;">{{Session::get('err')}}</h4>
-            
-        @endif
-        @if (Session::has("suc")))
-        <h4 style="color: green;">{{Session::get('suc')}}</h4>
-            
-        @endif
+            @if (Session::has('err')))
+                <h4 style="color: red;">{{ Session::get('err') }}</h4>
+
+            @endif
+            @if (Session::has('suc')))
+                <h4 style="color: green;">{{ Session::get('suc') }}</h4>
+
+            @endif
             <div class="container my-5">
                 {{-- DELETE USER FORM --}}
                 @if (Auth::user()->rights > 1)
@@ -100,13 +109,13 @@
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Пароль</span>
-                        <input required name="password" type="password" class="form-control" aria-label="Sizing example input"
-                            aria-describedby="inputGroup-sizing-sm">
+                        <input required name="password" type="password" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                     </div>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Подтверждение пароля</span>
-                        <input name="password_confirm" type="password" class="form-control" aria-label="Sizing example input"
-                            aria-describedby="inputGroup-sizing-sm">
+                        <input name="password_confirm" type="password" class="form-control"
+                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Отдел</span>

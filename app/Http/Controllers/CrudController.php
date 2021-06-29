@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\department_conn;
+use App\Models\File;
 
 class CrudController extends Controller
 {
@@ -186,6 +187,25 @@ class CrudController extends Controller
             return back()->with("suc", "Успешно!");
         } else {
             return back()->with("err", "Неудачно!");
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////
+    public function LoadFile(Request $req)
+    {
+        if (Auth::check()) {
+            $fileModel = new File;
+
+            if ($req->file()) {
+                $fileName = time() . '_' . $req->file->getClientOriginalName();
+                $filePath = $req->file('file')->storeAs('uploads/'.Auth::user()->email, $fileName, 'public');
+
+                $fileModel->file_name = time() . '_' . $req->file->getClientOriginalName();
+                $fileModel->file_path = '/storage/' . $filePath;
+                $fileModel->user_id = Auth::user()->id;
+                $fileModel->save();
+
+                return back()->with('suc', 'Усешно!');
+            }
         }
     }
 }
