@@ -63,9 +63,9 @@ class CrudController extends Controller
         if (isset($req->name) && (Auth::user()->rights >= 1)) {
             $pos->name = $req->name;
             $pos->save();
-            return back()->with("status", "Успешно!");
+            return back()->with("suc", "Успешно!");
         } else {
-            return back()->with("status", "Неудачно!");
+            return back()->with("err", "Неудачно!");
         }
     }
     //Удаление отедал
@@ -77,9 +77,9 @@ class CrudController extends Controller
             } else {
                 position::findOrFail($req->id)->delete();
             }
-            return back()->with("status", "Успешно!");
+            return back()->with("suc", "Успешно!");
         } else {
-            return back()->with("status", "Неудачно!");
+            return back()->with("err", "Неудачно!");
         }
     }
     //Удаление отедал
@@ -90,12 +90,12 @@ class CrudController extends Controller
             if (isset($pos->name)) {
                 $pos->name = $req->name;
                 $pos->save();
-                return back()->with("status", "Успешно!");
+                return back()->with("suc", "Успешно!");
             } else {
-                return back()->with("status", "Неудачно!");
+                return back()->with("err", "Неудачно!");
             }
         } else {
-            return back()->with("status", "Неудачно!");
+            return back()->with("err", "Неудачно!");
         }
     }
 }

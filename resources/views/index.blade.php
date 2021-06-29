@@ -231,48 +231,51 @@
 
                 {{-- ADD POSITION FORM --}}
 
-                <form action="">
+                <form action="/addposition" method="POST">
+                    @csrf
                     <h3>Добавление должности</h3>
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
-                        <input type="text" class="form-control" aria-label="Sizing example input"
+                        <input type="text" name="name" class="form-control" aria-label="Sizing example input"
                             aria-describedby="inputGroup-sizing-sm">
                     </div>
-                    <button class="btn btn-outline-secondary" type="button">Добавить</button>
+                    <button class="btn btn-outline-secondary" type="submit">Добавить</button>
                 </form>
 
                 @if (Auth::user()->rights > 1)
 
                     {{-- DELETE POSITION FORM --}}
-                    <form action="" method="post">
+                    <form action="/delposition" method="post">
+                        @csrf
                         <h3>Удаление должности</h3>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Отдел</span>
-                            <select class="form-select" multiple aria-label="multiple select example">
+                            <select name="id[]" class="form-select" multiple aria-label="multiple select example">
                                 @foreach ($positions as $position)
                                     <option value="{{ $position->id }}">{{ $position->name }}</option>
                                 @endforeach
                             </select>
-                            <button class="btn btn-outline-secondary" type="button">Удалить</button>
+                            <button class="btn btn-outline-secondary" type="submit">Удалить</button>
                         </div>
                     </form>
                 @endif
                 {{-- UPDATE POSITION FORM --}}
                 <form action="" method="post">
+                    @csrf
                     <h3>Изменение должности</h3>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Отдел</span>
-                        <select class="form-select" multiple aria-label="multiple select example">
+                        <select name="id" class="form-select" aria-label="select example">
                             @foreach ($positions as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
                             @endforeach
                         </select>
                         <div class="input-group input-group-sm my-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Название</span>
-                            <input type="text" class="form-control" aria-label="Sizing example input"
+                            <input type="text" name="name" class="form-control" aria-label="Sizing example input"
                                 aria-describedby="inputGroup-sizing-sm">
                         </div>
-                        <button class="btn btn-outline-secondary" type="button">Изменить</button>
+                        <button class="btn btn-outline-secondary" type="submit">Изменить</button>
                     </div>
                 </form>
             </div>
