@@ -20,6 +20,9 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/">OMEGA</a>
         </div>
+        <div class="container-fluid">
+            <a class="navbar" href="/register">register</a>
+        </div>
     </nav>
     {{--  --}}
 

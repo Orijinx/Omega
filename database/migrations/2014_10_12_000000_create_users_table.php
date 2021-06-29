@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('position_id')->unsigned()->nullable();
-            $table->foreign('position_id')->references('id')->on('positions');//Внешний ключ к должности
+            $table->foreign('position_id')->references('id')->on('positions')->onDelete("SET NULL");//Внешний ключ к должности
             // 
             $table->integer('rights')->default(0);// Права пользователя, дефолтное значение - обычный юзер.
             // 0 - обычный пользователь

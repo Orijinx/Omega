@@ -18,9 +18,9 @@ class CreateDepartmentConnsTable extends Migration
         Schema::create('department_conns', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');//Внешний ключ к пользователю
+            $table->foreign('user_id')->references('id')->on('users')->onDelete("cascade");//Внешний ключ к пользователю
             $table->bigInteger('dep_id')->unsigned();
-            $table->foreign('dep_id')->references('id')->on('departments');//Внешний ключ к отделу
+            $table->foreign('dep_id')->references('id')->on('departments')->onDelete("cascade");//Внешний ключ к отделу
             $table->timestamps();
         });
     }
