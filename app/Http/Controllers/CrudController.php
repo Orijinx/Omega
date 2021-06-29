@@ -17,7 +17,7 @@ class CrudController extends Controller
     public function AddDepartment(Request $req)
     {
         $dep = new department();
-        if (isset($req->name) && (Auth::user()->rights >= 1)) {
+        if (isset($req->name) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $dep->name = $req->name;
             $dep->save();
             return back()->with("suc", "Успешно!");
@@ -29,10 +29,10 @@ class CrudController extends Controller
     public function DelDepartment(Request $req)
     {
 
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             var_dump($req->id);
             if (is_array($req->id)) {
-                department::destroy($req->id);
+                department::destroy($req->id); //удаление множества записей
             } else {
                 department::findOrFail($req->id)->delete();
             }
@@ -44,8 +44,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function UpdDepartment(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights >= 1)) {
-            var_dump($req->id);
+        if (isset($req->id) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
 
             $dep = department::where("id", $req->id)->first();
             if (isset($dep->name)) {
@@ -64,7 +63,7 @@ class CrudController extends Controller
     public function AddPosition(Request $req)
     {
         $pos = new position();
-        if (isset($req->name) && (Auth::user()->rights >= 1)) {
+        if (isset($req->name) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $pos->name = $req->name;
             $pos->save();
             return back()->with("suc", "Успешно!");
@@ -75,7 +74,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function DelPosition(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             if (is_array($req->id)) {
                 position::destroy($req->id);
             } else {
@@ -89,7 +88,7 @@ class CrudController extends Controller
     //Удаление отедал
     public function UpdPosition(Request $req)
     {
-        if (isset($req->id) && (Auth::user()->rights > 1)) {
+        if (isset($req->id) && (Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $pos = position::where("id", $req->id);
             if (isset($pos->name)) {
                 $pos->name = $req->name;
@@ -105,12 +104,12 @@ class CrudController extends Controller
     ////////////////////////////////////////////////////////////////////
     public function AddUser(Request $req)
     {
-        if ((Auth::user()->rights >= 1)) {
+        if ((Auth::user()->rights >= 1)) { //Проверка прав и взодящего запроса
             $user = new User();
             $user->name = $req->name;
             $user->password = Hash::make($req->password);
 
-            if (User::where("email", $req->email)->exists()) {
+            if (User::where("email", $req->email)->exists()) { //Проверка нет ли существующего email
                 return back()->with("err", "Неудачно!");
             }
             $user->email = $req->email;
@@ -121,6 +120,7 @@ class CrudController extends Controller
             }
             $user->rights = $req->rights;
             $user->save();
+            // Создание записей в связующую таблицу отделов
             foreach ($req->dep_id as $dep) {
                 $depart = new department_conn();
                 $depart->user_id = $user->id;
@@ -137,20 +137,20 @@ class CrudController extends Controller
     }
     public function UpdUser(Request $req)
     {
-        if ((Auth::user()->rights >= 1) && (User::where("id", $req->id)->exists())) {
+        if ((Auth::user()->rights >= 1) && (User::where("id", $req->id)->exists())) { //Проверка прав и взодящего запроса
             $user = User::where("id", $req->id)->first();
-            if (isset($req->name)) {
+            if (isset($req->name)) {//Проверка вхождения в запрос
                 $user->name = $req->name;
             }
-            if (isset($req->password)) {
+            if (isset($req->password)) {//Проверка вхождения в запрос
                 $user->password = Hash::make($req->password);
             }
 
-            if (isset($req->email)) {
+            if (isset($req->email)) {//Проверка вхождения в запрос
                 $user->email = $req->email;
             }
 
-            if (isset($req->pos_id)) {
+            if (isset($req->pos_id)) {//Проверка вхождения в запрос
                 if (position::where("id", $req->pos_id)->exists()) {
 
                     $user->position_id = $req->pos_id;
@@ -159,22 +159,24 @@ class CrudController extends Controller
                 }
             }
 
-            if (isset($req->rihts)) {
+            if (isset($req->rihts)) {//Проверка вхождения в запрос
                 $user->rights = $req->rights;
             }
             $user->save();
 
-            if (isset($req->dep_id)) {
+            if (isset($req->dep_id)) {//Проверка вхождения в запрос
                 foreach ($req->dep_id as $dep) {
-                    $depart = new department_conn();
-                    $depart->user_id = $user->id;
-                    if (department::where("id", $dep)->exists()) {
-                        $depart->dep_id = $dep;
-                    } else {
-                        $user->delete();
-                        return back()->with("err", "Неудачно!");
+                    if (!department_conn::where("user_id", $user->id)->where("dep_id", $dep)->exists()) {
+                        $depart = new department_conn();
+                        $depart->user_id = $user->id;
+                        if (department::where("id", $dep)->exists()) {
+                            $depart->dep_id = $dep;
+                        } else {
+                            $user->delete();
+                            return back()->with("err", "Неудачно!");
+                        }
+                        $depart->save();
                     }
-                    $depart->save();
                 }
             }
             return back()->with("suc", "Успешно!");
@@ -182,7 +184,7 @@ class CrudController extends Controller
     }
     public function DelUser(Request $req)
     {
-        if ((Auth::user()->id != $req->id) && (Auth::user()->rights > 1)) {
+        if ((Auth::user()->id != $req->id) && (Auth::user()->rights > 1)) { //Проверка прав и взодящего запроса
             User::destroy($req->id);
             return back()->with("suc", "Успешно!");
         } else {
@@ -193,18 +195,20 @@ class CrudController extends Controller
     public function LoadFile(Request $req)
     {
         if (Auth::check()) {
-            $fileModel = new File;
+            $file = new File;
 
             if ($req->file()) {
-                $fileName = time() . '_' . $req->file->getClientOriginalName();
-                $filePath = $req->file('file')->storeAs('uploads/'.Auth::user()->email, $fileName, 'public');
-
-                $fileModel->file_name = time() . '_' . $req->file->getClientOriginalName();
-                $fileModel->file_path = '/storage/' . $filePath;
-                $fileModel->user_id = Auth::user()->id;
-                $fileModel->save();
+                $fileName =  date('d-m-Y') . '_' . $req->file->getClientOriginalName(); //Генерация новго имени "ДАТА" + "ОРИГИНАЛЬНОЕ ИМЯ"
+                $filePath = $req->file('file')->storeAs('uploads/' . Auth::user()->email, $fileName, 'public');//Загрузка файла в Storage
+                // запись файла в БД
+                $file->file_name = time() . '_' . $req->file->getClientOriginalName();
+                $file->file_path = '/storage/' . $filePath;
+                $file->user_id = Auth::user()->id;
+                $file->save();
 
                 return back()->with('suc', 'Усешно!');
+            } else {
+                return back()->with('err', 'Неудачно!');
             }
         }
     }

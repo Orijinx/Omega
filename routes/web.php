@@ -15,15 +15,12 @@ use App\Http\Controllers\CrudController;
 |
 */
 // Вывод вью составляющих
-Route::get('/', [MainController::class,"MainView"]);
-Route::get('/files/{id}',[MainController::class,"FileView"]);
+Route::get('/', [MainController::class,"MainView"]);//Главная страница
+Route::get('/files/{id}',[MainController::class,"FileView"]);//Просмотр файлов
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
+/////////////////////////////////////////////////////
 require __DIR__.'/auth.php';
-
+////////////////////////////////////////////////////
 // Руты для изменения информации
 Route::post('/adddepartment',[CrudController::class,"AddDepartment"]); //Добавление отедал
 Route::post('/deldepartment',[CrudController::class,"DelDepartment"]); //Удаление отдела
@@ -33,9 +30,9 @@ Route::post('/addposition',[CrudController::class,"AddPosition"]); //Добав�
 Route::post('/delposition',[CrudController::class,"DelPosition"]); //Удаление должности
 Route::post('/updposition',[CrudController::class,"UpdPosition"]); //Изменение должности
 ///////////////////////////////////////////////////////////////////////
-Route::post('/adduser',[CrudController::class,"AddUser"]); //Добавление должности
-Route::post('/deluser',[CrudController::class,"DelUser"]); //Добавление должности
-Route::post('/upduser',[CrudController::class,"UpdUser"]); //Добавление должности
+Route::post('/adduser',[CrudController::class,"AddUser"]); //Добавление пользователя
+Route::post('/deluser',[CrudController::class,"DelUser"]); //Удаление пользователя
+Route::post('/upduser',[CrudController::class,"UpdUser"]); //Изменение пользователя
 
 ///////////////////////
-Route::post('/loadfile',[CrudController::class,"LoadFile"]); //Добавление должности
+Route::post('/loadfile',[CrudController::class,"LoadFile"]); //Загрузка файлов

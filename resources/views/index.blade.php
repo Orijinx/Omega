@@ -2,19 +2,20 @@
 
 @section('body')
     <table class="table table-bordered">
+        <h2>Пользователи</h2>
         <thead>
             <tr>
                 <th scope="col">Файлы</th>
-                <th scope="col">email</th>
-                <th scope="col">Departments</th>
-                <th scope="col">Position</th>
-                <th scope="col">Rights</th>
+                <th scope="col">Еmail</th>
+                <th scope="col">Отдел</th>
+                <th scope="col">Должность</th>
+                <th scope="col">Права</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($users as $user)
                 <tr>
-                    <th scope="row"><a href="files/{{$user->id}}">#{{ $user->id }}</a></th>
+                    <th scope="row"><a href="files/{{ $user->id }}">#{{ $user->id }}</a></th>
                     <td>{{ $user->email }}</td>
                     <td>
                         @foreach ($user->departments()->get() as $department)
@@ -45,15 +46,20 @@
         </tbody>
     </table>
     <hr>
-    <form action="/loadfile" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="exampleFormControlFile1">Загрузка файлов</label>
-            <input name="file" type="file" class="form-control-file" id="exampleFormControlFile1">
-       <button class="btn btn-primary" type="submit">Загрузить</button>
-        </div>
-    </form>
-    <hr>
+    @if (Auth::check())
+        <form action="/loadfile" method="POST" enctype="multipart/form-data">
+            <h3>Загрузка файлов</h3>
+            @csrf
+            <div class="form-group">
+                <label for="exampleFormControlFile1">Загрузка файлов</label>
+                <input name="file" type="file" class="form-control-file" id="exampleFormControlFile1">
+                <button class="btn btn-primary" type="submit">Загрузить</button>
+            </div>
+        </form>
+        <hr>
+
+    @endif
+
 
     @if (Auth::check())
 
@@ -90,13 +96,6 @@
                 <form action="/adduser" method="POST">
                     @csrf
                     <h3>Добавить пользователя</h3>
-                    {{-- <div class="input-group mb-3">
-                        <select class="form-select" id="deletgroup">
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->email }}</option>
-                            @endforeach
-                        </select>
-                    </div> --}}
                     <div class="input-group input-group-sm mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Email</span>
                         <input required name="email" type="text" class="form-control" aria-label="Sizing example input"
@@ -185,7 +184,6 @@
                         <span class="input-group-text" id="inputGroup-sizing-sm">Должность</span>
 
                         <select name="pos_id" class="form-select">
-
                             @foreach ($positions as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
                             @endforeach
@@ -195,6 +193,7 @@
                         <span class="input-group-text" id="inputGroup-sizing-sm">Роль</span>
 
                         <select name="rights" class="form-select">
+                            <option>Не изменять</option>
                             <option value="0">Пользователь</option>
                             <option value="1">Менеджер</option>
                             <option value="2">Администратор</option>
