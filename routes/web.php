@@ -27,3 +27,7 @@ require __DIR__.'/auth.php';
 Route::post('/adddepartment',[CrudController::class,"AddDepartment"]); //Добавление отедал
 Route::post('/deldepartment',[CrudController::class,"DelDepartment"]); //Удаление отдела
 Route::post('/upddepartment',[CrudController::class,"UpdDepartment"]); //Изменение отдела
+///////////////////////////////////
+Route::post('/addposition',[CrudController::class,"AddPosition"]); //Добавление должности
+Route::post('/delposition',[CrudController::class,"DelPosition"]); //Удаление должности
+Route::post('/updposition',[CrudController::class,"UpdPosition"]); //Изменение должности
