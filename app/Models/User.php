@@ -47,6 +47,10 @@ class User extends Authenticatable
     public function departments(){
         return $this->belongsToMany(department::class,'department_conns','user_id','dep_id');
     }
+    //Связь к файлам
+    public function files(){
+        return $this->belongsTo(file::class,'id','user_id');
+    }
     //Связь к должности
     public function position(){
         return $this->hasOne(Position::class,'id','position_id');

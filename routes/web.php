@@ -16,6 +16,7 @@ use App\Http\Controllers\CrudController;
 */
 // Вывод вью составляющих
 Route::get('/', [MainController::class,"MainView"]);
+Route::get('/files/{id}',[MainController::class,"FileView"]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,3 +32,10 @@ Route::post('/upddepartment',[CrudController::class,"UpdDepartment"]); //Изм�
 Route::post('/addposition',[CrudController::class,"AddPosition"]); //Добавление должности
 Route::post('/delposition',[CrudController::class,"DelPosition"]); //Удаление должности
 Route::post('/updposition',[CrudController::class,"UpdPosition"]); //Изменение должности
+///////////////////////////////////////////////////////////////////////
+Route::post('/adduser',[CrudController::class,"AddUser"]); //Добавление должности
+Route::post('/deluser',[CrudController::class,"DelUser"]); //Добавление должности
+Route::post('/upduser',[CrudController::class,"UpdUser"]); //Добавление должности
+
+///////////////////////
+Route::post('/loadfile',[CrudController::class,"LoadFile"]); //Добавление должности
