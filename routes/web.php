@@ -31,3 +31,7 @@ Route::post('/upddepartment',[CrudController::class,"UpdDepartment"]); //Изм�
 Route::post('/addposition',[CrudController::class,"AddPosition"]); //Добавление должности
 Route::post('/delposition',[CrudController::class,"DelPosition"]); //Удаление должности
 Route::post('/updposition',[CrudController::class,"UpdPosition"]); //Изменение должности
+///////////////////////////////////////////////////////////////////////
+Route::post('/adduser',[CrudController::class,"AddUser"]); //Добавление должности
+Route::post('/deluser',[CrudController::class,"DelUser"]); //Добавление должности
+Route::post('/upduser',[CrudController::class,"UpdUser"]); //Добавление должности
