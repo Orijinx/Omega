@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\CrudController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,7 @@ use App\Http\Controllers\MainController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+// Вывод вью составляющих
 Route::get('/', [MainController::class,"MainView"]);
 
 Route::get('/dashboard', function () {
@@ -21,3 +22,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+// Руты для изменения информации
+Route::post('/adddepartment',[CrudController::class,"AddDepartment"]); //Добавление отедал
+Route::post('/deldepartment',[CrudController::class,"DelDepartment"]); //Удаление отдела
+Route::post('/upddepartment',[CrudController::class,"UpdDepartment"]); //Изменение отдела
