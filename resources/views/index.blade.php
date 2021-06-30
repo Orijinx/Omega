@@ -111,11 +111,6 @@
                         <input required name="password" type="password" class="form-control"
                             aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                     </div>
-                    <div class="input-group input-group-sm mb-3">
-                        <span class="input-group-text" id="inputGroup-sizing-sm">Подтверждение пароля</span>
-                        <input name="password_confirm" type="password" class="form-control"
-                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                    </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="inputGroup-sizing-sm">Отдел</span>
                         <select required name="dep_id[]" class="form-select" multiple aria-label="multiple select example">
@@ -184,6 +179,7 @@
                         <span class="input-group-text" id="inputGroup-sizing-sm">Должность</span>
 
                         <select name="pos_id" class="form-select">
+                            <option>Не изменять</option>
                             @foreach ($positions as $position)
                                 <option value="{{ $position->id }}">{{ $position->name }}</option>
                             @endforeach
